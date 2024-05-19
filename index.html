@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сохранение и вывод данных</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <label for="data">Введите информацию:</label><br>
@@ -14,45 +13,55 @@
     <div id="output"></div>
 
     <script>
-        // Функция для отправки данных на сервер и сохранения их
+        // Функция для сохранения данных
         function saveData() {
-            var inputData = $("#data").val();
+            var inputData = document.getElementById("data").value;
 
-            $.ajax({
-                url: "save_data.php", // путь к файлу PHP для сохранения данных
-                type: "POST",
-                data: { data: inputData },
-                success: function(response) {
-                    // При успешном сохранении обновляем вывод на странице
+            // Создаем новый объект XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+
+            // Конфигурируем его: POST-запрос, адрес save_data.php
+            xhr.open('POST', 'save_data.php', true);
+
+            // Устанавливаем заголовок Content-Type
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            // Посылаем запрос
+            xhr.send('data=' + inputData);
+
+            // При успешной отправке данных обновляем вывод на странице
+            xhr.onload = function() {
+                if (xhr.status === 200) {
                     displayData();
-                },
-                error: function(xhr, status, error) {
-                    // Обработка ошибки сохранения данных
-                    console.error("Ошибка сохранения данных:", error);
+                } else {
+                    console.error('Ошибка сохранения данных:', xhr.statusText);
                 }
-            });
+            };
         }
 
-        // Функция для загрузки данных с сервера и вывода их на страницу
+        // Функция для вывода данных
         function displayData() {
-            $.ajax({
-                url: "read_data.php", // путь к файлу PHP для чтения данных
-                type: "GET",
-                success: function(response) {
-                    // Обновляем вывод на странице с полученными данными
-                    $("#output").html(response);
-                },
-                error: function(xhr, status, error) {
-                    // Обработка ошибки чтения данных
-                    console.error("Ошибка чтения данных:", error);
+            // Создаем новый объект XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+
+            // Конфигурируем его: GET-запрос, адрес read_data.php
+            xhr.open('GET', 'read_data.php', true);
+
+            // Посылаем запрос
+            xhr.send();
+
+            // При успешном получении данных обновляем вывод на странице
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    document.getElementById('output').innerHTML = xhr.responseText;
+                } else {
+                    console.error('Ошибка чтения данных:', xhr.statusText);
                 }
-            });
+            };
         }
 
         // При загрузке страницы выводим уже сохраненные данные
-        $(document).ready(function() {
-            displayData();
-        });
+        window.onload = displayData;
     </script>
 </body>
 </html>
