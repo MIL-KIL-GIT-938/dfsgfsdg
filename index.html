@@ -1,50 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сохранение и вывод данных</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Приглашение на сайт</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <label for="data">Введите информацию:</label><br>
-    <input type="text" id="data" name="data">
-    <button onclick="saveData()">Сохранить</button>
-
-    <div id="output"></div>
-
-    <script>
-        // Функция для сохранения данных в локальное хранилище браузера
-        function saveData() {
-            var inputData = document.getElementById("data").value;
-            var existingData = localStorage.getItem("savedData");
-
-            if (existingData) {
-                // Если уже есть сохраненные данные, добавляем новые данные к ним
-                var newData = existingData + "<br>" + inputData;
-                localStorage.setItem("savedData", newData);
-            } else {
-                // Если нет сохраненных данных, создаем новые
-                localStorage.setItem("savedData", inputData);
-            }
-
-            // Обновляем вывод на странице
-            displayData();
-        }
-
-        // Функция для вывода данных из локального хранилища на страницу
-        function displayData() {
-            var outputDiv = document.getElementById("output");
-            var savedData = localStorage.getItem("savedData");
-
-            if (savedData) {
-                outputDiv.innerHTML = "<h2>Сохраненные данные:</h2>" + savedData;
-            } else {
-                outputDiv.innerHTML = "<h2>Нет сохраненных данных</h2>";
-            }
-        }
-
-        // При загрузке страницы выводим уже сохраненные данные
-        window.onload = displayData;
-    </script>
+  <div class="container">
+    <h1>Введите ключ приглашения</h1>
+    <form id="inviteForm">
+      <input type="text" id="inviteKey" placeholder="Введите ключ приглашения">
+      <button type="submit">Присоединиться</button>
+    </form>
+    <div id="message"></div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
