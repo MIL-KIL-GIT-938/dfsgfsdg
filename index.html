@@ -13,51 +13,34 @@
     <div id="output"></div>
 
     <script>
-        // Функция для сохранения данных
+        // Функция для сохранения данных в локальное хранилище браузера
         function saveData() {
             var inputData = document.getElementById("data").value;
+            var existingData = localStorage.getItem("savedData");
 
-            // Создаем новый объект XMLHttpRequest
-            var xhr = new XMLHttpRequest();
+            if (existingData) {
+                // Если уже есть сохраненные данные, добавляем новые данные к ним
+                var newData = existingData + "<br>" + inputData;
+                localStorage.setItem("savedData", newData);
+            } else {
+                // Если нет сохраненных данных, создаем новые
+                localStorage.setItem("savedData", inputData);
+            }
 
-            // Конфигурируем его: POST-запрос, адрес save_data.php
-            xhr.open('POST', 'save_data.php', true);
-
-            // Устанавливаем заголовок Content-Type
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-            // Посылаем запрос
-            xhr.send('data=' + inputData);
-
-            // При успешной отправке данных обновляем вывод на странице
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    displayData();
-                } else {
-                    console.error('Ошибка сохранения данных:', xhr.statusText);
-                }
-            };
+            // Обновляем вывод на странице
+            displayData();
         }
 
-        // Функция для вывода данных
+        // Функция для вывода данных из локального хранилища на страницу
         function displayData() {
-            // Создаем новый объект XMLHttpRequest
-            var xhr = new XMLHttpRequest();
+            var outputDiv = document.getElementById("output");
+            var savedData = localStorage.getItem("savedData");
 
-            // Конфигурируем его: GET-запрос, адрес read_data.php
-            xhr.open('GET', 'read_data.php', true);
-
-            // Посылаем запрос
-            xhr.send();
-
-            // При успешном получении данных обновляем вывод на странице
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    document.getElementById('output').innerHTML = xhr.responseText;
-                } else {
-                    console.error('Ошибка чтения данных:', xhr.statusText);
-                }
-            };
+            if (savedData) {
+                outputDiv.innerHTML = "<h2>Сохраненные данные:</h2>" + savedData;
+            } else {
+                outputDiv.innerHTML = "<h2>Нет сохраненных данных</h2>";
+            }
         }
 
         // При загрузке страницы выводим уже сохраненные данные
