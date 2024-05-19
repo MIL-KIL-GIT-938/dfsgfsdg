@@ -3,14 +3,12 @@ $file_path = 'data.txt';
 
 // Проверяем, существует ли файл
 if (file_exists($file_path)) {
-    // Читаем содержимое файла в массив построчно
-    $data = file($file_path, FILE_IGNORE_NEW_LINES);
+    // Читаем содержимое файла в переменную
+    $data = file_get_contents($file_path);
 
-    // Выводим данные на страницу
-    foreach ($data as $line) {
-        echo $line . "<br>";
-    }
+    // Выводим данные
+    echo "<h2>Сохраненные данные:</h2>" . nl2br($data);
 } else {
-    echo "Файл не найден.";
+    echo "<h2>Нет сохраненных данных</h2>";
 }
 ?>
