@@ -1,17 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма ввода данных</title>
+    <title>Сохранение и вывод данных</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <form action="save_data.php" method="post">
-        <label for="data">Введите информацию:</label><br>
-        <input type="text" id="data" name="data"><br>
-        <input type="submit" value="Сохранить">
-    </form>
-    <br>
-    <a href="read_data.php">Показать сохраненные данные</a>
+    <label for="data">Введите информацию:</label><br>
+    <input type="text" id="data" name="data">
+    <button onclick="saveData()">Сохранить</button>
+
+    <div id="output"></div>
+
+    <script>
+        // Функция для отправки данных на сервер и сохранения их
+        function saveData() {
+            var inputData = $("#data").val();
+
+            $.ajax({
+                url: "save_data.php", // путь к файлу PHP для сохранения данных
+                type: "POST",
+                data: { data: inputData },
+                success: function(response) {
+                    // При успешном сохранении обновляем вывод на странице
+                    displayData();
+                },
+                error: function(xhr, status, error) {
+                    // Обработка ошибки сохранения данных
+                    console.error("Ошибка сохранения данных:", error);
+                }
+            });
+        }
+
+        // Функция для загрузки данных с сервера и вывода их на страницу
+        function displayData() {
+            $.ajax({
+                url: "read_data.php", // путь к файлу PHP для чтения данных
+                type: "GET",
+                success: function(response) {
+                    // Обновляем вывод на странице с полученными данными
+                    $("#output").html(response);
+                },
+                error: function(xhr, status, error) {
+                    // Обработка ошибки чтения данных
+                    console.error("Ошибка чтения данных:", error);
+                }
+            });
+        }
+
+        // При загрузке страницы выводим уже сохраненные данные
+        $(document).ready(function() {
+            displayData();
+        });
+    </script>
 </body>
 </html>
