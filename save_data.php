@@ -1,5 +1,5 @@
 <?php
-$data = $_POST['data']; // Получаем данные из формы
+$data = $_POST['data']; // Получаем данные из запроса
 
 // Путь к файлу для сохранения данных
 $file_path = 'data.txt';
@@ -12,7 +12,4 @@ fwrite($file, $data . PHP_EOL);
 
 // Закрываем файл
 fclose($file);
-
-// Перенаправляем пользователя обратно на страницу формы
-header('Location: input_form.html');
 ?>
