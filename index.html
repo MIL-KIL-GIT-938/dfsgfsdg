@@ -1,20 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Приглашение на сайт</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create and View File</title>
 </head>
 <body>
-  <div class="container">
-    <h1>Введите ключ приглашения</h1>
-    <form id="inviteForm">
-      <input type="text" id="inviteKey" placeholder="Введите ключ приглашения">
-      <button type="submit">Присоединиться</button>
-    </form>
-    <div id="message"></div>
-  </div>
-  <script src="script.js"></script>
+    <h2>Create File</h2>
+    <textarea id="fileContent" rows="10" cols="50"></textarea><br>
+    <button onclick="createFile()">Create File</button>
+
+    <h2>View File</h2>
+    <button onclick="loadFile()">View File Content</button>
+    <pre id="fileDisplayArea"></pre>
+
+    <script>
+        function createFile() {
+            var content = document.getElementById('fileContent').value;
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status == 200) {
+                        alert("File created successfully!");
+                    } else {
+                        alert("Error creating file");
+                    }
+                }
+            };
+            xhr.open("POST", "/create_file", true);
+            xhr.setRequestHeader("Content-Type", "text/plain");
+            xhr.send(content);
+        }
+
+        function loadFile() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status == 200) {
+                        var fileContent = xhr.responseText;
+                        document.getElementById('fileDisplayArea').innerText = fileContent;
+                    } else {
+                        alert("Error loading file");
+                    }
+                }
+            };
+            xhr.open("GET", "/view_file", true);
+            xhr.send();
+        }
+    </script>
 </body>
 </html>
